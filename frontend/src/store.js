@@ -4,7 +4,7 @@ import { productListReducer, productDetailsReducer } from './reducers/productsRe
 import { userLoginReducer, userRegisterReducer, userVerifyOtpReducer } from './reducers/userReducers';
 // import { userRegisterReducer } from './reducers/registerReducers'; // Import new reducers
 import { cartReducer } from './reducers/cartReducer';
-import { userSendChangePasswordReducer, userConfirmChangePasswordReducer } from './reducers/userReducers';
+import { userChangePasswordReducer, userConfirmChangePasswordReducer } from './reducers/userReducers';
 
 // Define rootReducer using combineReducers
 const rootReducer = combineReducers({
@@ -13,7 +13,7 @@ const rootReducer = combineReducers({
     cart: cartReducer,
     userLogin: userLoginReducer,
     userRegister: userRegisterReducer,
-    userSendChangePassword: userSendChangePasswordReducer, // Add new reducer
+    userChangePassword: userChangePasswordReducer, // Add new reducer
     userConfirmChangePassword: userConfirmChangePasswordReducer, // Add new reducer
     // userVerifyOtp: userVerifyOtpReducer
 });

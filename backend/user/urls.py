@@ -9,8 +9,8 @@ urlpatterns = [
     path('users/profile/', UserProfileView.as_view(), name='users-profile'),
     path('users/', UserProfileView.as_view(), name='users-profiles'),
     path('users/register/', views.registerUser, name='register'),
-    path('changepassword/', UserChangePasswordView.as_view(), name='changepassword'),
-    path('send-reset-password-email/', SendPasswordResetEmailView.as_view(), name='send-reset-password-email'),
-    path('reset-password/<uid>/<token>', UserPasswordResetView.as_view(), name='reset-password'),
+    path('users/changepassword/', UserChangePasswordView.as_view(), name='changepassword'), # -> URL WAS CHANGED FROM changepass to users/changepass
+    path('users/resetpassword-email/', SendPasswordResetEmailView.as_view(), name='resetpassword-email'),
+    path('users/reset-password/<uid>/<token>', UserPasswordResetView.as_view(), name='reset-password'),# -> URL WAS CHANGED
     # path()
 ]

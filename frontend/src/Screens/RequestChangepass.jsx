@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { sendChangePassword } from '../actions/userActions';
+import { requestResetPassword } from '../actions/userActions';
 
 const RequestChangepass = () => {
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [password2, setPassword2] = useState('');
     const [validEmail, setValidEmail] = useState(false);
     const dispatch = useDispatch();
     const userLogin = useSelector((state) => state.userLogin);
@@ -19,7 +17,7 @@ const RequestChangepass = () => {
             return;
         }
         // Dispatch action to send change password request
-        dispatch(sendChangePassword(email, password, password2));
+        dispatch(requestResetPassword(email));
     };
 
     // Function to validate email format
@@ -47,7 +45,7 @@ const RequestChangepass = () => {
 
     return (
         <div>
-            <h2>Request Password Change</h2>
+            <h2>Reset Password</h2>
             {error && <p>Error: {error}</p>}
             {loading && <p>Loading...</p>}
             <form onSubmit={submitHandler}>
@@ -62,30 +60,6 @@ const RequestChangepass = () => {
                     />
                     {!validEmail && email && <p>Email is not valid or associated with an active account</p>}
                 </div>
-                {validEmail && (
-                    <>
-                        <div>
-                            <label htmlFor="password">New Password</label>
-                            <input
-                                type="password"
-                                id="password"
-                                placeholder="Enter new password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="password2">Confirm Password</label>
-                            <input
-                                type="password"
-                                id="password2"
-                                placeholder="Confirm new password"
-                                value={password2}
-                                onChange={(e) => setPassword2(e.target.value)}
-                            />
-                        </div>
-                    </>
-                )}
                 {validEmail && <button type="submit">Submit</button>}
             </form>
         </div>

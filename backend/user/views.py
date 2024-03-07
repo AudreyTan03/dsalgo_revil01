@@ -25,7 +25,7 @@ def get_tokens_for_user(user): # Token generator ->Auds (gumagana sa regis)
     }
 
 @api_view(['POST'])
-def registerUser(request):
+def registerUser(request): # user di nakaset as active pag nag regis as of now
     # print('Request Data:', request.data)  # pang test
     serializer = UserRegistrationSerializers(data=request.data, context={'request': request})
     if serializer.is_valid(raise_exception=True):

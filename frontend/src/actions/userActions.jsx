@@ -6,12 +6,15 @@ import {
     USER_LOGOUT,
     USER_SET_INSTRUCTOR,
     USER_SET_STUDENT,
-    USER_SEND_CHANGE_PASSWORD_FAIL,
-    USER_SEND_CHANGE_PASSWORD_REQUEST,
-    USER_SEND_CHANGE_PASSWORD_SUCCESS,
-    USER_CONFIRM_CHANGE_PASSWORD_FAIL,
+    USER_CHANGE_PASSWORD_REQUEST,
+    USER_CHANGE_PASSWORD_SUCCESS,
+    USER_CHANGE_PASSWORD_FAIL,
     USER_CONFIRM_CHANGE_PASSWORD_REQUEST,
     USER_CONFIRM_CHANGE_PASSWORD_SUCCESS,
+    USER_CONFIRM_CHANGE_PASSWORD_FAIL,
+    USER_REQUEST_RESET_PASSWORD_REQUEST,
+    USER_REQUEST_RESET_PASSWORD_SUCCESS,
+    USER_REQUEST_RESET_PASSWORD_FAIL,
     USER_REGISTER_REQUEST,
     USER_REGISTER_SUCCESS,
     USER_REGISTER_FAIL,
@@ -102,9 +105,9 @@ export const logout = () => (dispatch) => {
     dispatch({ type: USER_LOGOUT });
 };
 
-export const sendChangePassword = (password, password2, token) => async (dispatch) => {
+export const changePassword = (password, password2, token) => async (dispatch) => {
     try {
-        dispatch({ type: USER_SEND_CHANGE_PASSWORD_REQUEST });
+        dispatch({ type: USER_CHANGE_PASSWORD_REQUEST });
         const config = {
             headers: {
                 'Content-Type': 'application/json',
@@ -116,12 +119,47 @@ export const sendChangePassword = (password, password2, token) => async (dispatc
             config
         );
         dispatch({
-            type: USER_SEND_CHANGE_PASSWORD_SUCCESS,
+            type: USER_CHANGE_PASSWORD_SUCCESS,
             payload: data,
         });
     } catch (error) {
         dispatch({
-            type: USER_SEND_CHANGE_PASSWORD_FAIL,
+            type: USER_CHANGE_PASSWORD_FAIL,
+            payload: error.response && error.response.data.details
+                ? error.response.data.details
+                : error.message,
+        });
+    }
+};
+
+export const requestResetPassword = (email) => async (dispatch) => {
+    try {
+        // Dispatch request action
+        dispatch({ type: USER_REQUEST_RESET_PASSWORD_REQUEST });
+
+        // Set request headers
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        };
+
+        // Send POST request to backend to request password reset
+        const { data } = await axios.post(
+            'http://127.0.0.1:8000/api/users/resetpassword-email/',
+            { email },
+            config
+        );
+
+        // Dispatch success action with response data
+        dispatch({
+            type: USER_REQUEST_RESET_PASSWORD_SUCCESS,
+            payload: data,
+        });
+    } catch (error) {
+        // Dispatch fail action with error details
+        dispatch({
+            type: USER_REQUEST_RESET_PASSWORD_FAIL,
             payload: error.response && error.response.data.details
                 ? error.response.data.details
                 : error.message,
@@ -138,7 +176,7 @@ export const confirmChangePassword = (password, password2, uid, token) => async 
             },
         };
         const { data } = await axios.post(
-            `http://127.0.0.1:8000/api/reset-password/${uid}/${token}`,
+            `http://127.0.0.1:8000/api/users/reset-password/${uid}/${token}`,
             { password, password2 },
             config
         );
@@ -155,32 +193,3 @@ export const confirmChangePassword = (password, password2, uid, token) => async 
         });
     }
 };
-
-// export const verifyOtp = (user_id, otp_id, otp) => async (dispatch) => {
-//     try{
-//         console.log(user_id, otp_id, otp)
-//         dispatch({ type: USER_VERIFY_OTP_REQUEST });
-//         const config = {
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//         };
-//         const { data } = await instance.post(
-//             "/verify-otp/",
-//             {'user_id': user_id, 'otp_id': otp_id, 'otp': otp},
-//             config
-//         )
-//         dispatch({
-//             type: USER_VERIFY_OTP_SUCCESS,
-//             payload: data,
-//         })
-//         return data
-//     } catch (error) {
-//         dispatch({
-//             type: USER_VERIFY_OTP_FAIL,
-//             payload: error.response && error.response.data.details
-//                 ? error.response.data.details
-//                 : error.message,
-//         });
-//     }
-// }

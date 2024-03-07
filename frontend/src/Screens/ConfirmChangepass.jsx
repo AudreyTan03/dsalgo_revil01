@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { confirmChangePassword } from '../actions/userActions';
+import { useParams } from 'react-router-dom';
 
 const ConfirmChangePass = ({ match }) => {
     const [password, setPassword] = useState('');
@@ -8,7 +9,7 @@ const ConfirmChangePass = ({ match }) => {
     const dispatch = useDispatch();
     const userConfirmChangePassword = useSelector((state) => state.userConfirmChangePassword);
     const { loading, error } = userConfirmChangePassword;
-    const { uid, token } = match.params; // Get uid and token from URL params
+    const { uid, token } = useParams(); // Get uid and token from URL params
 
     const submitHandler = (e) => {
         e.preventDefault();

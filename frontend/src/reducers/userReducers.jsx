@@ -1,4 +1,7 @@
 import {
+    USER_SET_INSTRUCTOR,
+    USER_SET_STUDENT,
+    USER_SET_ROLE_FAIL,
     USER_REGISTER_REQUEST,
     USER_REGISTER_SUCCESS,
     USER_REGISTER_FAIL,
@@ -6,15 +9,12 @@ import {
     USER_LOGIN_SUCCESS,
     USER_LOGIN_FAIL,
     USER_LOGOUT,
-    USER_SEND_CHANGE_PASSWORD_REQUEST,
-    USER_SEND_CHANGE_PASSWORD_SUCCESS,
-    USER_SEND_CHANGE_PASSWORD_FAIL,
+    USER_CHANGE_PASSWORD_REQUEST, 
+    USER_CHANGE_PASSWORD_SUCCESS, 
+    USER_CHANGE_PASSWORD_FAIL, 
     USER_CONFIRM_CHANGE_PASSWORD_REQUEST,
     USER_CONFIRM_CHANGE_PASSWORD_SUCCESS,
     USER_CONFIRM_CHANGE_PASSWORD_FAIL,
-    USER_SET_INSTRUCTOR,
-    USER_SET_STUDENT,
-    USER_SET_ROLE_FAIL,
 } from '../constants/userConstants';
 
 export const userSetRoleReducer = (state = {}, action) => {
@@ -60,14 +60,13 @@ export const userLoginReducer = (state = {}, action) => {
     }
 };
 
-// Handling new actions for changing password
-export const userSendChangePasswordReducer = (state = {}, action) => {
+export const userChangePasswordReducer = (state = {}, action) => {
     switch(action.type) {
-        case USER_SEND_CHANGE_PASSWORD_REQUEST:
+        case USER_CHANGE_PASSWORD_REQUEST:
             return { loading: true };
-        case USER_SEND_CHANGE_PASSWORD_SUCCESS:
+        case USER_CHANGE_PASSWORD_SUCCESS:
             return { loading: false, success: true };
-        case USER_SEND_CHANGE_PASSWORD_FAIL:
+        case USER_CHANGE_PASSWORD_FAIL:
             return { loading: false, error: action.payload };
         default:
             return state;
