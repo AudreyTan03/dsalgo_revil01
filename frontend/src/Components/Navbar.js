@@ -52,7 +52,7 @@ function Navbar() {
                 </Link>
                 <div className='dropdown-content'>
                   <Link to='/upload'>Upload</Link>
-                  <Link to='/courses2'>Courses2</Link>
+                  <Link to='/cart'>Course List</Link>
                   <Link to='/courses3'>Courses3</Link>
                 </div>
               </div>

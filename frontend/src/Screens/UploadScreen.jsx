@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { connect } from 'react-redux';
+import { uploadProduct } from '../actions/uploadAction'; // Adjust the import path as needed
+import './UploadScreen.css'; // Import your CSS file
 
-const UploadScreen = () => {
+const UploadScreen = ({ uploadProduct }) => {
     const [file, setFile] = useState(null);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
@@ -38,27 +40,19 @@ const UploadScreen = () => {
         formData.append('price', price);
         formData.append('countInStock', countInStock);
 
-        axios.post('http://localhost:8000/api/post-product/', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        })
-        .then(response => {
-            console.log(response.data);
-            // Reset form fields
-            setFile(null);
-            setName('');
-            setDescription('');
-            setPrice('');
-            setCountInStock('');
-        })
-        .catch(error => {
-            console.error('Error uploading product:', error);
-        });
+        // Dispatch the uploadProduct action
+        uploadProduct(formData);
+
+        // Reset form fields
+        setFile(null);
+        setName('');
+        setDescription('');
+        setPrice('');
+        setCountInStock('');
     };
 
     return (
-        <div>
+        <div className="upload-screen">
             <h2>Upload Product</h2>
             <form onSubmit={handleSubmit}>
                 <div>
@@ -87,4 +81,4 @@ const UploadScreen = () => {
     );
 };
 
-export default UploadScreen;
+export default connect(null, { uploadProduct })(UploadScreen);
