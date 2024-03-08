@@ -1,6 +1,8 @@
 import React from "react";
-import Header from "./Components/Header";
-import Footer from "./Components/Footer";
+// import Header from "./Components/Header";
+import Navbar from "./Components/Navbar";
+// import Footer from "./Components/Footer";
+import HeroSection from "./Components/HeroSection";
 import "./bootstrap.min.css";
 import { Container } from "react-bootstrap";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -18,9 +20,11 @@ import ConfirmChangePass from "./Screens/ConfirmChangepass";
 function App() {
   return (
     <Router>
-      <Header />
+      {/* <Header /> */}
+        <Navbar />
         <Container>
           <Routes>
+            <Route path='/HeroSection' element={<HeroSection />} />
             <Route path='/login' element={<LoginScreen />} />
             <Route path= '/cart' element={<CartScreen/>}/>
             <Route path='/register' element={<RegisterScreen />} />
@@ -34,7 +38,7 @@ function App() {
 
           </Routes>
         </Container>
-      <Footer/>
+      {/* <Footer/> */}
     </Router>
   );
 }

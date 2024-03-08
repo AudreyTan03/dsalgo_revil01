@@ -1,21 +1,29 @@
 footer {
-    background: linear-gradient(90deg, #161A30  0%, rgb(26, 23, 23) 100%);
-    padding: 20px;
-    text-align: center;
-  }
-  
-  .footer-links {
-    display: flex;
-    justify-content: space-around;
-  }
-  
-  .footer-links a {
-    text-decoration: none;
-    color: #ffffff;
-    font-weight: bold;
-    margin: 0 15px;
-  }
-  
-  .footer-links a:hover {
-    color: #007bff; /* Change this color to the desired hover color */
-  }
+  background: transparent;
+  padding: 20px;
+  text-align: center;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: space-around;
+}
+
+.footer-links a {
+  text-decoration: none;
+  color: #ffffff;
+  font-weight: bold;
+  margin: 0 15px;
+}
+
+.footer-links a:hover {
+  color: #007bff; /* Change this color to the desired hover color */
+}
+.hero-container {
+  position: relative;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+}
