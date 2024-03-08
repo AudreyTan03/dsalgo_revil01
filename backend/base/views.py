@@ -13,6 +13,34 @@ from rest_framework import permissions, status
 
 
 
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser, FormParser
+from .models import Product, ShippingAddress
+from .serializers import ProductSerializer
+
+
+
+class ProductView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+
+    def get(self, request, *args, **kwargs):
+        products = Product.objects.all()
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data)
+
+class PostProduct(APIView):
+    def post(self, request, *args, **kwargs):
+        product_serializer = ProductSerializer(data=request.data)
+        if product_serializer.is_valid():
+            product_serializer.save()
+            return Response(product_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            print('error', product_serializer.errors)
+            return Response(product_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 @api_view(['GET'])
 def getRoutes(request):
     routes = [

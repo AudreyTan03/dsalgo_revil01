@@ -232,3 +232,7 @@ SIMPLE_JWT = {
 PASSWORD_RESET_TIMEOUT= 900 # 900 seconds = 15 minutes
 
 AUTH_USER_MODEL='user.User'
+
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

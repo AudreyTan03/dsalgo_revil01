@@ -48,10 +48,10 @@ function Navbar() {
                   className='nav-links'
                   onClick={closeMobileMenu}
                 >
-                  Courses
+                  Options
                 </Link>
                 <div className='dropdown-content'>
-                  <Link to='/courses1'>Courses1</Link>
+                  <Link to='/upload'>Upload</Link>
                   <Link to='/courses2'>Courses2</Link>
                   <Link to='/courses3'>Courses3</Link>
                 </div>

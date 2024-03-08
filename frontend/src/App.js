@@ -15,6 +15,8 @@ import ProductHome from "./Screens/ProductHomeScreen";
 import Home from "./Screens/HomeScreen";
 import RequestChangePass from "./Screens/RequestChangepass";
 import ConfirmChangePass from "./Screens/ConfirmChangepass";
+import UploadProduct from "./Screens/UploadScreen"
+
 // need mag kakasunod amp
 
 function App() {
@@ -32,6 +34,8 @@ function App() {
             <Route path='/confirm-changepass/:uid/:token' element={<ConfirmChangePass />} />
             <Route path = "/products" element={<ProductHome />} exact />
             <Route path = "/product/:id" element= {<Productscreen />} />
+            <Route path = "/upload" element= {<UploadProduct />} />
+
             {/* <Route path='/sign-in' element={<SignIn />} /> */}
             <Route path='/' element={<Home />} />
 
