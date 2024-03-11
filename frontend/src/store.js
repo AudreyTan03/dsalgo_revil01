@@ -15,7 +15,7 @@ const rootReducer = combineReducers({
     userRegister: userRegisterReducer,
     userChangePassword: userChangePasswordReducer, // Add new reducer
     userConfirmChangePassword: userConfirmChangePasswordReducer, // Add new reducer
-    // userVerifyOtp: userVerifyOtpReducer
+    userVerifyOtp: userVerifyOtpReducer
 });
 
 // Retrieve cartItems and userInfo from localStorage

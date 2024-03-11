@@ -15,6 +15,9 @@ import {
     USER_CONFIRM_CHANGE_PASSWORD_REQUEST,
     USER_CONFIRM_CHANGE_PASSWORD_SUCCESS,
     USER_CONFIRM_CHANGE_PASSWORD_FAIL,
+    USER_VERIFY_OTP_REQUEST,
+    USER_VERIFY_OTP_SUCCESS,
+    USER_VERIFY_OTP_FAIL,  
 } from '../constants/userConstants';
 
 export const userSetRoleReducer = (state = {}, action) => {
@@ -44,6 +47,21 @@ export const userRegisterReducer = (state = {}, action) => {
     }
   };
 
+  export const userVerifyOtpReducer = (state = {}, action) => {
+    switch (action.type) {
+      case USER_VERIFY_OTP_REQUEST:
+        return { loading: true };
+      case USER_VERIFY_OTP_SUCCESS:
+        return { loading: false, userVerifyOtp: action.payload };
+      case USER_VERIFY_OTP_FAIL:
+        return { loading: false, error: action.payload };
+      case USER_LOGOUT:
+        return {};
+      default:
+        return state;
+        
+    }
+  }
 
 export const userLoginReducer = (state = {}, action) => {
     switch (action.type) {
@@ -86,15 +104,4 @@ export const userConfirmChangePasswordReducer = (state = {}, action) => {
     }
 };
 
-// export const userVerifyOtpReducer = (state = {}, action) => {
-//     switch(action.type) {
-//         case USER_VERIFY_OTP_REQUEST:
-//             return { loading: true };
-//         case USER_VERIFY_OTP_SUCCESS:
-//             return { loading: false, success: true };
-//         case USER_VERIFY_OTP_FAIL:
-//             return { loading: false, error: action.payload };
-//         default:
-//             return state;
-//     }
-// }
+

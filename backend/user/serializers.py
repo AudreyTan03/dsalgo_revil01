@@ -5,6 +5,8 @@ from django.contrib.auth import authenticate
 from django.utils.encoding import smart_str, force_bytes, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from .models import Profile
+
 
 class UserRegistrationSerializers(serializers.ModelSerializer):
     # Additional fields for user type
@@ -66,11 +68,25 @@ class UserLoginSerializer(serializers.ModelSerializer):
         else:
             raise serializers.ValidationError("Invalid credentials")
 
+# class UserSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = ['email', 'name', 'user_type']
+# class UserSerializerWithToken(UserSerializer):
+#     token = serializers.SerializerMethodField(read_only=True)
+
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'email', 'name']
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = '__all__'
+
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
 
 
 class UserChangePasswordSerializer(serializers.Serializer):

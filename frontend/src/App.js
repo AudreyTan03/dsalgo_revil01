@@ -16,6 +16,7 @@ import Home from "./Screens/HomeScreen";
 import RequestChangePass from "./Screens/RequestChangepass";
 import ConfirmChangePass from "./Screens/ConfirmChangepass";
 import UploadProduct from "./Screens/UploadScreen"
+import OTPVerification from "./Screens/OTPVerification";
 
 // need mag kakasunod amp
 
@@ -35,6 +36,7 @@ function App() {
             <Route path = "/products" element={<ProductHome />} exact />
             <Route path = "/product/:id" element= {<Productscreen />} />
             <Route path = "/upload" element= {<UploadProduct />} />
+            <Route path= '/verify-otp' element={<OTPVerification />} />
 
             {/* <Route path='/sign-in' element={<SignIn />} /> */}
             <Route path='/' element={<Home />} />

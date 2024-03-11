@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from django.dispatch import receiver
 import pyotp
+
 # Custom User Manager
 class UserManager(BaseUserManager):
     def create_user(self, email, name, password=None, is_instructor=False, is_student=False):
@@ -104,7 +106,7 @@ class OTP(models.Model):
     is_verified = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.user.username
+        return self.user.name
     
     def generate_otp(self):
         totp = pyotp.TOTP(self.otp_secret)
@@ -114,3 +116,15 @@ class OTP(models.Model):
         totp = pyotp.TOTP(self.otp_secret)
         return totp.verify(entered_otp)
 
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    image = models.ImageField(default='default.jpg', upload_to='userprofile_pics')
+    name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return f'{self.user.name} Profile'
+
+
+    def create_profile(sender, instance, created,kwargs):
+        if created:
+            Profile.objects.create(user=instance)

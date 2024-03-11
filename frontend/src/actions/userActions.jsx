@@ -18,7 +18,10 @@ import {
     USER_REGISTER_REQUEST,
     USER_REGISTER_SUCCESS,
     USER_REGISTER_FAIL,
-    USER_SET_ROLE_FAIL
+    // USER_SET_ROLE_FAIL
+    USER_VERIFY_OTP_REQUEST,
+    USER_VERIFY_OTP_SUCCESS,
+    USER_VERIFY_OTP_FAIL,
 } from '../constants/userConstants';
 
 export const register = (name, email, password, userType, confirmPassword) => async (dispatch) => {
@@ -52,6 +55,36 @@ export const register = (name, email, password, userType, confirmPassword) => as
     } catch (error) {
         dispatch({
             type: USER_REGISTER_FAIL,
+            payload: error.response && error.response.data.details
+                ? error.response.data.details
+                : error.message,
+        });
+    }
+};
+
+export const VerifyOtp = (user_id, otp_id, otp_code) => async (dispatch) => {
+    try {
+        console.log(user_id, otp_id, otp_code);
+        dispatch({
+            type: USER_VERIFY_OTP_REQUEST  // Corrected action type name
+        });
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        };
+        const { data } = await axios.post(
+            'http://127.0.0.1:8000/api/verify-otp/',
+            { user_id: user_id, otp_id: otp_id, otp_code: otp_code }, // Corrected object key names
+            config
+        );
+        dispatch({
+            type: USER_VERIFY_OTP_SUCCESS,  // Corrected action type name
+            payload: data,
+        });
+    } catch (error) {
+        dispatch({
+            type: USER_VERIFY_OTP_FAIL,  // Add appropriate action type for failure
             payload: error.response && error.response.data.details
                 ? error.response.data.details
                 : error.message,
