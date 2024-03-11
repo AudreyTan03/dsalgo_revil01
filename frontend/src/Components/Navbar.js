@@ -1,12 +1,12 @@
-// Navbar.js
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Navbar.css';
 import { BsSearch } from "react-icons/bs";
 
-function Navbar({ handleSearch, searchTerm }) {
+function Navbar() {
   const [click, setClick] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
@@ -14,6 +14,11 @@ function Navbar({ handleSearch, searchTerm }) {
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
     // Add logic to toggle dark mode
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    // Add logic for real-time search
   };
 
   useEffect(() => {
@@ -30,15 +35,13 @@ function Navbar({ handleSearch, searchTerm }) {
           <input
             type='text'
             placeholder='Search...'
-            value={searchTerm}
-            onChange={handleSearch}
+            value={searchQuery}
+            onChange={handleSearchChange}
             className='search-input'
           />
           <BsSearch className='search-icon' />
         </div>
-        <div className='dark-mode-toggle' onClick={toggleDarkMode}>
-          {darkMode ? 'Light Mode' : 'Dark Mode'}
-        </div>
+        <div className={darkMode ? 'dark-mode-toggle dark' : 'dark-mode-toggle light'} onClick={toggleDarkMode}></div>
         <div className='menu-icon' onClick={handleClick}>
           <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
         </div>
