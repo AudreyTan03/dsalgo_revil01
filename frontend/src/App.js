@@ -15,7 +15,7 @@ import ProductHome from "./Screens/ProductHomeScreen";
 import Home from "./Screens/HomeScreen";
 import RequestChangePass from "./Screens/RequestChangepass";
 import ConfirmChangePass from "./Screens/ConfirmChangepass";
-import UploadProduct from "./Screens/UploadScreen"
+import UploadProduct from "./Screens/UploadScreen";
 import OTPVerification from "./Screens/OTPVerification";
 
 // need mag kakasunod amp
@@ -24,26 +24,30 @@ function App() {
   return (
     <Router>
       {/* <Header /> */}
-        <Navbar />
-        <Container>
-          <Routes>
-            <Route path='/HeroSection' element={<HeroSection />} />
-            <Route path='/login' element={<LoginScreen />} />
-            <Route path= '/cart' element={<CartScreen/>}/>
-            <Route path='/register' element={<RegisterScreen />} />
-            <Route path='/request-changepass' element={<RequestChangePass />} />
-            <Route path='/confirm-changepass/:uid/:token' element={<ConfirmChangePass />} />
-            <Route path = "/products" element={<ProductHome />} exact />
-            <Route path = "/product/:id" element= {<Productscreen />} />
-            <Route path = "/upload" element= {<UploadProduct />} />
-            <Route path= '/verify-otp' element={<OTPVerification />} />
+      <Navbar />
+      <Container>
+        <Routes>
+          <Route path="/HeroSection" element={<HeroSection />} />
+          <Route path="/login" element={<LoginScreen />} />
+          <Route path="/cart" element={<CartScreen />} />
+          <Route path="/register" element={<RegisterScreen />} />
+          <Route path="/request-changepass" element={<RequestChangePass />} />
+          <Route
+            path="/confirm-changepass/:uid/:token"
+            element={<ConfirmChangePass />}
+          />
+          <Route path="/products" element={<ProductHome />} exact />
+          <Route path="/product/:id" element={<Productscreen />} />
+          <Route path="/upload" element={<UploadProduct />} />
+          <Route
+            path={`/verify-otp/user_id/:userId/otp/:otpId`}
+            element={<OTPVerification />}
+          />
 
-            {/* <Route path='/sign-in' element={<SignIn />} /> */}
-            <Route path='/' element={<Home />} />
-
-
-          </Routes>
-        </Container>
+          {/* <Route path='/sign-in' element={<SignIn />} /> */}
+          <Route path="/" element={<Home />} />
+        </Routes>
+      </Container>
       {/* <Footer/> */}
     </Router>
   );

@@ -65,42 +65,33 @@ def registerUser(request):
         message = {'detail': str(e)}
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
-
 @api_view(['POST'])
 def verify_otp(request):
     data = request.data
-    print(data)
     try:
-        user_id = data['user_id']
-        otp_id = data['otp_id']
-        otp_code = data['otp_code']
+        user_id = data["user_id"]
+        otp_id = data["otp_id"]
+        otp_code = data["otp_code"]
 
         user = User.objects.get(id=user_id)
         otp = OTP.objects.get(id=otp_id, user=user)
+
         print(otp_code)
         print(otp.otp_secret)
-
-        if user.is_active:
-            return Response({'message': 'User is already verified'}, status=status.HTTP_400_BAD_REQUEST)
-
-        if otp.is_verified:
-            return Response({'message': 'OTP is already verified'}, status=status.HTTP_400_BAD_REQUEST)
-        
         totp = pyotp.TOTP(otp.otp_secret)
-
         if totp.verify(otp_code, valid_window=7):
             user.is_active = True
             user.save()
 
             otp.is_verified = True
             otp.save()
-
-            return Response({'message': 'OTP verified successfully'}, status=status.HTTP_200_OK)
-        else:
-            raise Exception('OTP verification failed')
+            
+            return Response({"detail": "OTP verified successfully"}, status=status.HTTP_200_OK)
         
+        else:
+            raise Exception("Invalid OTP code")
     except Exception as e:
-        message = {'message': str(e)}
+        message = {"detail": str(e)}
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 def send_otp_email(email, otp_code):
@@ -110,6 +101,25 @@ def send_otp_email(email, otp_code):
     recipient_list = [email]
     send_mail(subject, message, email_from, recipient_list)
 
+# @api_view(['POST'])
+# def resend_otp(request):
+#     try:
+#         data = request.data
+#         user_id = data['user_id']
+#         user = User.objects.get(id=user_id)
+        
+#         if user.is_active:
+#             return Response({'message': 'Account is already active. Cannot resend OTP.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+#         otp = OTP.objects.get(user=user)
+#         otp_key = otp.otp_secret
+#         otp_instance = pyotp.TOTP(otp_key, digits=6)
+#         otp_code = otp_instance.now()
+#         send_otp_email(user.email, otp_code)
+#         return Response({'message': 'OTP has been sent to your email'}, status=status.HTTP_200_OK)
+    
+#     except User.DoesNotExist:
+#         return Response({'message': 'User does not exist'}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
 def loginUser(request, format=None):

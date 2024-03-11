@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,44 +11,27 @@ function RegisterScreen() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [userType, setUserType] = useState('student');
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo: userLoginUserInfo } = userLogin;
-
   const userRegister = useSelector((state) => state.userRegister);
-  const { error, loading, userInfo } = userRegister;
-
-  const navigate = useNavigate();
+  const { error, loading } = userRegister;
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (userInfo) {
-      navigate('/verify-otp');
-    }
-  }, [navigate, userInfo]);
+  const navigate = useNavigate();
 
   const submitHandler = async (e) => {
     e.preventDefault();
-
+  
     try {
       const response = await dispatch(register(name, email, password, userType, confirmPassword));
       console.log('Register Response:', response);
-    
-      if (response && response.message && response.message !== 'User created successfully') {
-        console.error('Registration failed:', response.message);
-        // Handle unsuccessful registration, e.g., display an error message
-      } else {
-        // Registration was successful
-        console.log('Registration successful');
-        const { user_id, otp_id } = response;
-        navigate(`/verify-otp?user_id=${user_id}&otp_id=${otp_id}`);
-      }
+  
+      // Redirect to OTP verification screen
+      const { user_id, otp_id } = response; // Ensure that user_id and otp_id are correctly returned from the register action
+      navigate(`/verify-otp/user_id/${user_id}/otp/${otp_id}`); // Redirect to OTP verification screen with user_id and otp_id
     } catch (error) {
       console.error('Error during registration:', error.message);
       // Handle other errors, e.g., display a generic error message
     }
   };
-    
-
+  
   return (
     <FormContainer>
       <h1>Sign Up</h1>

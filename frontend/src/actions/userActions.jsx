@@ -22,45 +22,44 @@ import {
     USER_VERIFY_OTP_REQUEST,
     USER_VERIFY_OTP_SUCCESS,
     USER_VERIFY_OTP_FAIL,
+    // USER_RESEND_OTP_REQUEST,
+    // USER_RESEND_OTP_SUCCESS,
+    // USER_RESEND_OTP_FAIL,
 } from '../constants/userConstants';
 
 export const register = (name, email, password, userType, confirmPassword) => async (dispatch) => {
     try {
-        dispatch({ type: USER_REGISTER_REQUEST });
-        const config = {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        };
-        const { data } = await axios.post(
-            'http://127.0.0.1:8000/api/users/register/',
-            { name, email, password, password2: confirmPassword, user_type: userType }, // Include confirmPassword as password2
-            config
-        );
-        dispatch({
-            type: USER_REGISTER_SUCCESS,
-            payload: data,
-        });
-        localStorage.setItem('userInfo', JSON.stringify(data));
-
-        // Set user role
-        if (userType === 'instructor') {
-            dispatch({ type: USER_SET_INSTRUCTOR });
-        } else {
-            dispatch({ type: USER_SET_STUDENT });
-        }
-
-        // Redirect logic here
-
+      dispatch({ type: USER_REGISTER_REQUEST });
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+      const { data } = await axios.post(
+        'http://127.0.0.1:8000/api/users/register/',
+        { name, email, password, password2: confirmPassword, user_type: userType }, // Include confirmPassword as password2
+        config
+      );
+      dispatch({
+        type: USER_REGISTER_SUCCESS,
+        payload: data,
+      });
+  
+      // Redirect to OTP verification screen
+      const { user_id, otp_id } = data; // Ensure that user_id and otp_id are present in the response
+      return { user_id, otp_id }; // Return user_id and otp_id for redirection
+  
     } catch (error) {
-        dispatch({
-            type: USER_REGISTER_FAIL,
-            payload: error.response && error.response.data.details
-                ? error.response.data.details
-                : error.message,
-        });
+      dispatch({
+        type: USER_REGISTER_FAIL,
+        payload: error.response && error.response.data.details
+          ? error.response.data.details
+          : error.message,
+      });
+      throw error; // Rethrow the error for handling in the component
     }
-};
+  };
+  
 
 export const VerifyOtp = (user_id, otp_id, otp_code) => async (dispatch) => {
     try {
@@ -91,6 +90,43 @@ export const VerifyOtp = (user_id, otp_id, otp_code) => async (dispatch) => {
         });
     }
 };
+
+// export const resendOtp = (user_id, otp_id) => async (dispatch) => {
+//     try {
+//       dispatch({
+//         type: USER_RESEND_OTP_REQUEST,
+//       });
+  
+//       const config = {
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//       };
+  
+//       const { data } = await axios.post(
+//         'api/user/resend-otp/',
+//         { user_id, otp_id },
+//         config
+//       );
+  
+//       dispatch({
+//         type: USER_RESEND_OTP_SUCCESS,
+//         payload: data, // Make sure to include the response data in the payload
+//       });
+  
+//       return data; // Return the response data
+  
+//     } catch (error) {
+//       dispatch({
+//         type: USER_RESEND_OTP_FAIL,
+//         payload:
+//           error.response && error.response.data.message
+//             ? error.response.data.message
+//             : error.message,
+//       });
+//     }
+//   };
+
 
 export const login = (email, password) => async (dispatch) => {
     try {

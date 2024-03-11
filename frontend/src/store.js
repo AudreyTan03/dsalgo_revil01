@@ -1,7 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import {thunk} from 'redux-thunk'; // Correct import statement
 import { productListReducer, productDetailsReducer } from './reducers/productsReducer';
-import { userLoginReducer, userRegisterReducer, userVerifyOtpReducer } from './reducers/userReducers';
+import { userLoginReducer, userRegisterReducer, userVerifyOtpReducer, userResendOtpReducer } from './reducers/userReducers';
 // import { userRegisterReducer } from './reducers/registerReducers'; // Import new reducers
 import { cartReducer } from './reducers/cartReducer';
 import { userChangePasswordReducer, userConfirmChangePasswordReducer } from './reducers/userReducers';
@@ -15,7 +15,8 @@ const rootReducer = combineReducers({
     userRegister: userRegisterReducer,
     userChangePassword: userChangePasswordReducer, // Add new reducer
     userConfirmChangePassword: userConfirmChangePasswordReducer, // Add new reducer
-    userVerifyOtp: userVerifyOtpReducer
+    userVerifyOtp: userVerifyOtpReducer,
+    // userResendOtp: userResendOtpReducer,
 });
 
 // Retrieve cartItems and userInfo from localStorage

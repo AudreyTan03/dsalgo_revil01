@@ -14,4 +14,5 @@ urlpatterns = [
     path('users/resetpassword-email/', SendPasswordResetEmailView.as_view(), name='resetpassword-email'),
     path('users/reset-password/<uid>/<token>', UserPasswordResetView.as_view(), name='reset-password'),# -> URL WAS CHANGED
     path('verify-otp/', verify_otp, name='verify_otp'),
+    # path('resend-otp/', resend_otp, name='resend_otp'),
 ]

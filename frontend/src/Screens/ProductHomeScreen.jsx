@@ -1,12 +1,12 @@
+// ProductHome.js
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Form } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import Product from '../Components/Product';
-import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { listProducts } from '../actions/productActions';
-
 import Loader from '../Components/Loader';
 import Message from '../Components/Message';
+import Navbar from '../Components/Navbar'; // Import the Navbar component
 
 function ProductHome() {
   const dispatch = useDispatch();
@@ -29,16 +29,7 @@ function ProductHome() {
 
   return (
     <div>
-      <Form>
-        <Form.Group controlId="search">
-          <Form.Control
-            type="text"
-            placeholder="Search products..."
-            value={searchTerm}
-            onChange={handleSearch}
-          />
-        </Form.Group>
-      </Form>
+      <Navbar handleSearch={handleSearch} searchTerm={searchTerm} /> {/* Pass handleSearch and searchTerm as props */}
       {loading ? (
         <Loader />
       ) : error ? (
