@@ -21,6 +21,27 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from .models import Product, ShippingAddress
 from .serializers import ProductSerializer
 
+from rest_framework import generics, status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.permissions import BasePermission
+
+from .models import Product
+from .serializers import ProductSerializer
+
+class ProductDeleteView(generics.DestroyAPIView):
+    queryset = Product.objects.all()
+    lookup_field = 'pk'
+
+    def delete(self, request, *args, **kwargs):
+        try:
+            product = self.get_object()
+            product.delete()
+            return Response({"message": "Product deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+        except Product.DoesNotExist:
+            return Response({"message": "Product does not exist"}, status=status.HTTP_404_NOT_FOUND)
+
 
 
 class ProductView(APIView):

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom'; // Import useNavigate hook
+import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../actions/cartActions';
 
 const ProductScreen = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // Initialize useNavigate hook
+  const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [qty, setQty] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -33,7 +33,21 @@ const ProductScreen = () => {
 
   const handleAddToCart = () => {
     dispatch(addToCart(id, qty));
-    navigate('/cart'); // Use navigate to navigate to '/cart' route
+    navigate('/cart');
+  };
+
+  const handleDeleteProduct = async () => {
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/api/products/${id}/delete/`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to delete product. Status: ${response.status}`);
+      }
+      navigate('/'); // Navigate back to the home page or any other appropriate page
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   if (loading) {
@@ -48,10 +62,15 @@ const ProductScreen = () => {
     return <div>No product found</div>;
   }
 
-
   return (
     <div>
       <h1>{product.name}</h1>
+      {product.video && (
+        <video controls style={{ width: '100%' }}>
+          <source src={product.video} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      )}
       <img src={product.image} alt={product.name} />
       <p>{product.description}</p>
       <p>{product.price}</p>
@@ -68,6 +87,7 @@ const ProductScreen = () => {
       </div>
 
       <button onClick={handleAddToCart}>Add to Cart</button>
+      <button onClick={handleDeleteProduct}>Delete Product</button>
     </div>
   );
 };

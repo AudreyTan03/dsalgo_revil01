@@ -4,14 +4,19 @@ import { uploadProduct } from '../actions/uploadAction'; // Adjust the import pa
 import './UploadScreen.css'; // Import your CSS file
 
 const UploadScreen = ({ uploadProduct }) => {
-    const [file, setFile] = useState(null);
+    const [imageFile, setImageFile] = useState(null);
+    const [videoFile, setVideoFile] = useState(null);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState('');
     const [countInStock, setCountInStock] = useState('');
 
-    const handleFileChange = (e) => {
-        setFile(e.target.files[0]);
+    const handleImageChange = (e) => {
+        setImageFile(e.target.files[0]);
+    };
+
+    const handleVideoChange = (e) => {
+        setVideoFile(e.target.files[0]);
     };
 
     const handleNameChange = (e) => {
@@ -34,7 +39,8 @@ const UploadScreen = ({ uploadProduct }) => {
         e.preventDefault();
 
         let formData = new FormData();
-        formData.append('image', file);
+        formData.append('image', imageFile);
+        formData.append('video', videoFile);
         formData.append('name', name);
         formData.append('description', description);
         formData.append('price', price);
@@ -44,7 +50,8 @@ const UploadScreen = ({ uploadProduct }) => {
         uploadProduct(formData);
 
         // Reset form fields
-        setFile(null);
+        setImageFile(null);
+        setVideoFile(null);
         setName('');
         setDescription('');
         setPrice('');
@@ -57,7 +64,11 @@ const UploadScreen = ({ uploadProduct }) => {
             <form onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="image">Image:</label>
-                    <input type="file" id="image" onChange={handleFileChange} required />
+                    <input type="file" id="image" onChange={handleImageChange} accept="image/*" required />
+                </div>
+                <div>
+                    <label htmlFor="video">Video:</label>
+                    <input type="file" id="video" onChange={handleVideoChange} accept="video/*" required />
                 </div>
                 <div>
                     <label htmlFor="name">Name:</label>

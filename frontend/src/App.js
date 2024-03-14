@@ -17,17 +17,25 @@ import RequestChangePass from "./Screens/RequestChangepass";
 import ConfirmChangePass from "./Screens/ConfirmChangepass";
 import UploadProduct from "./Screens/UploadScreen";
 import OTPVerification from "./Screens/OTPVerification";
-
+import HomeScreen from "./Screens/HomeScreen";
+import StudentNav from "./Screens/StudentHomeScreen";
+import StudentHomeScreen from "./Screens/StudentHomeScreen";
 // need mag kakasunod amp
 
 function App() {
   return (
     <Router>
       {/* <Header /> */}
-      <Navbar />
+      
       <Container>
         <Routes>
           <Route path="/HeroSection" element={<HeroSection />} />
+          <Route path="studenthomescreen" element={<StudentHomeScreen />} />
+
+          <Route path="/homeScreen" element={<HomeScreen/>} />
+          <Route path="/StudentNav" element={<StudentNav />} />
+
+          <Route path="/navbar" element={<Navbar />} />
           <Route path="/login" element={<LoginScreen />} />
           <Route path="/cart" element={<CartScreen />} />
           <Route path="/register" element={<RegisterScreen />} />

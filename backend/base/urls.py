@@ -5,6 +5,7 @@ from django.urls import path
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
+from .views import ProductDeleteView
 
 
 urlpatterns = [
@@ -16,6 +17,8 @@ urlpatterns = [
     path('products/', views.getProducts, name="products"),
     path('products/<str:pk>', views.getProduct, name="products"),
      path('post-product/', views.PostProduct.as_view(), name="post_product"),
+    path('products/<int:pk>/delete/', ProductDeleteView.as_view(), name='product-delete'),
+
 
 
 

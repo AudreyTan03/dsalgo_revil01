@@ -123,29 +123,24 @@ def send_otp_email(email, otp_code):
 
 @api_view(['POST'])
 def loginUser(request, format=None):
-    print('login')
     if request.method == 'POST':
         serializer = UserLoginSerializer(data=request.data)
-        print('Request Post')
-        if serializer.is_valid(): # validated_Data kasi un ung sa serializer data kasi una is get kaya di nya na authenticate 
+        if serializer.is_valid():
             email = serializer.validated_data['email']
             password = serializer.validated_data['password']
-            # print(serializer.validated_data)
             user = authenticate(email=email, password=password)
             
-            print('Test user')
-            print(email, password)
-            print(user)
             if user is not None:
                 token = get_tokens_for_user(user)
-                # user_type = 'instructor' if user.is_instructor else 'student'
-                response_data = {'token': token, 'msg': 'Login Success'}
+                user_type = 'instructor' if user.is_instructor else 'student'
+                response_data = {'token': token, 'msg': 'Login Success', 'user_type': user_type}
                 return Response(response_data, status=status.HTTP_200_OK)
             else:
                 return Response({'errors': {'non_field_errors': ['Email or Password is not valid']}}, status=status.HTTP_400_BAD_REQUEST)
         else:
             # Handle serializer validation errors
             raise ValidationError(serializer.errors)
+
 
 
 class UserProfileView(APIView):
