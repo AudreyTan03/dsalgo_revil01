@@ -98,13 +98,12 @@ const ProductScreen = () => {
         </select>
       </div>
 
-      {isInstructor && (
         <div>
           <button onClick={handleAddToCart}>Add to Cart</button>
           <button onClick={handleDeleteProduct}>Delete Product</button>
           <button onClick={handleEditProduct}>Edit Product</button>
         </div>
-      )}
+      
     </div>
   );
 };
