@@ -11,6 +11,7 @@ const ProductScreen = () => {
   const [qty, setQty] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isInstructor, setIsInstructor] = useState(false); // State to track if the user is an instructor
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -29,6 +30,10 @@ const ProductScreen = () => {
     };
 
     fetchProduct();
+    
+    // Check if the user is an instructor
+    const userIsInstructor = localStorage.getItem('is_instructor') === 'true';
+    setIsInstructor(userIsInstructor);
   }, [id]);
 
   const handleAddToCart = () => {
@@ -78,6 +83,9 @@ const ProductScreen = () => {
       <img src={product.image} alt={product.name} />
       <p>{product.description}</p>
       <p>{product.price}</p>
+      <p> created at ito{product.createdAt}</p>
+
+      <p> edited at {product.editedAt}</p>
 
       <div>
         <label>Quantity:</label>
@@ -90,9 +98,13 @@ const ProductScreen = () => {
         </select>
       </div>
 
-      <button onClick={handleAddToCart}>Add to Cart</button>
-      <button onClick={handleDeleteProduct}>Delete Product</button>
-      <button onClick={handleEditProduct}>Edit Product</button> {/* Button to edit the current product */}
+      {isInstructor && (
+        <div>
+          <button onClick={handleAddToCart}>Add to Cart</button>
+          <button onClick={handleDeleteProduct}>Delete Product</button>
+          <button onClick={handleEditProduct}>Edit Product</button>
+        </div>
+      )}
     </div>
   );
 };

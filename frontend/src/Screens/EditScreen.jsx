@@ -78,7 +78,7 @@ const EditProduct = () => {
         {products.map(product => (
           <li key={product._id}>
             <input type="checkbox" checked={editProductId === product._id} onChange={() => handleSelectProduct(product._id)} />
-            {product.name}
+            {product.name} - Last Edited: {product.editedAt}
           </li>
         ))}
       </ul>
