@@ -30,6 +30,30 @@ from rest_framework.permissions import BasePermission
 from .models import Product
 from .serializers import ProductSerializer
 
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
+from .models import Product
+from .serializers import ProductSerializer
+
+from rest_framework import generics
+from rest_framework.response import Response
+from .models import Product
+from .serializers import ProductSerializer
+
+class ProductPatchView(generics.UpdateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+    def patch(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+
 class ProductDeleteView(generics.DestroyAPIView):
     queryset = Product.objects.all()
     lookup_field = 'pk'

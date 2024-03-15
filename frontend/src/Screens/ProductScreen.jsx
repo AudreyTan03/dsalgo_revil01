@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { addToCart } from '../actions/cartActions';
 
 const ProductScreen = () => {
@@ -50,6 +50,10 @@ const ProductScreen = () => {
     }
   };
 
+  const handleEditProduct = () => {
+    navigate(`/edit`); // Navigate to the edit screen for the current product
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -88,6 +92,7 @@ const ProductScreen = () => {
 
       <button onClick={handleAddToCart}>Add to Cart</button>
       <button onClick={handleDeleteProduct}>Delete Product</button>
+      <button onClick={handleEditProduct}>Edit Product</button> {/* Button to edit the current product */}
     </div>
   );
 };

@@ -20,6 +20,7 @@ import OTPVerification from "./Screens/OTPVerification";
 import HomeScreen from "./Screens/HomeScreen";
 import StudentNav from "./Screens/StudentHomeScreen";
 import StudentHomeScreen from "./Screens/StudentHomeScreen";
+import EditScreen from "./Screens/EditScreen";
 // need mag kakasunod amp
 
 function App() {
@@ -47,6 +48,8 @@ function App() {
           <Route path="/products" element={<ProductHome />} exact />
           <Route path="/product/:id" element={<Productscreen />} />
           <Route path="/upload" element={<UploadProduct />} />
+          <Route path="/edit" element={<EditScreen />} />
+
           <Route
             path={`/verify-otp/user_id/:userId/otp/:otpId`}
             element={<OTPVerification />}
