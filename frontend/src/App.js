@@ -22,6 +22,7 @@ import StudentNav from "./Screens/StudentHomeScreen";
 import StudentHomeScreen from "./Screens/StudentHomeScreen";
 // need mag kakasunod amp
 import ProfileScreen from "./Screens/ProfileScreen";
+import EditScreen from "./Screens/EditScreen";
 
 function App() {
   return (
@@ -31,8 +32,8 @@ function App() {
       <Container>
         <Routes>
           <Route path="/HeroSection" element={<HeroSection />} />
-          <Route path="studenthomescreen" element={<StudentHomeScreen />} />
-
+          <Route path="/studenthomescreen" element={<StudentHomeScreen />} />
+          <Route path="/edit" element={<EditScreen />} />
           <Route path="/homeScreen" element={<HomeScreen/>} />
           <Route path="/StudentNav" element={<StudentNav />} />
 

@@ -28,7 +28,7 @@ class Product(models.Model):
     video = models.FileField(upload_to="videos/", null=True, blank=True)
     createdAt = models.DateTimeField(auto_now_add=True)
     _id = models.AutoField(primary_key=True)
-    # editedAt = models.DateTimeField(auto_now=True)  # This field will be automatically updated to the current time whenever the model is saved
+    editedAt = models.DateTimeField(auto_now=True)  # This field will be automatically updated to the current time whenever the model is saved
     def __str__(self):
         return self.name or 'Unnamed Product'
 
