@@ -132,21 +132,6 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.name
-    
-# @receiver(post_save, sender=User)
-# def create_user_profile(sender, instance, created, **kwargs):
-#     """
-#     Signal receiver function to create a profile for a newly registered user.
-#     """
-#     if created:
-#         Profile.objects.create(user=instance, name=instance.username)
-
-# @receiver(post_save, sender=User)
-# def save_user_profile(sender, instance, **kwargs):
-#     """
-#     Signal receiver function to save the profile when the user is updated.
-#     """
-#     instance.profile.save()
    
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
@@ -166,14 +151,4 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
 #         instance.profile.save()
 
 
-# Signal handler for Profile creation/update
-  
-# @receiver(post_save, sender=User)
-# def create_profile(sender, instance, created, **kwargs):
-#     if created:
-#         Profile.objects.create(user=instance, name=instance.name)  # Set the name attribute
 
-    
-# @receiver(post_save, sender=User)
-# def save_profile(sender, instance, **kwargs):
-#     instance.profile.save()

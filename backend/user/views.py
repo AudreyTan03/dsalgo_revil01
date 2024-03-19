@@ -165,6 +165,8 @@ def loginUser(request, format=None):
 
 
 
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def userProfile(request):
@@ -184,7 +186,7 @@ def updateProfile(request):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-                    
+
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])

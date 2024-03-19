@@ -83,7 +83,6 @@ class UserLoginSerializer(serializers.ModelSerializer):
 #         fields = ['id', 'user', 'image', 'name', 'bio']
 #         read_only_fields = ['id', 'user']  # Include all fields from the Profile model
 
-
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
