@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.shortcuts import get_object_or_404
 import pyotp
 from rest_framework.response import Response
 from rest_framework import status
@@ -20,13 +21,22 @@ from django.core.mail import send_mail
 # from .serializers import  UserSerializerWithToken
 
 #Generate token Manually
-def get_tokens_for_user(user): # Token generator ->Auds (gumagana sa regis)
+# from rest_framework_simplejwt.tokens import RefreshToken
+def get_tokens_for_user(user):
+    # Generate refresh token
     refresh = RefreshToken.for_user(user)
 
-    return {
+    # Include user's name and email in the token payload
+    access_token_payload = {
         'refresh': str(refresh),
         'access': str(refresh.access_token),
+        'name': user.name,  # Assuming 'name' is a field in your user model
+        'email': user.email,  # Assuming 'email' is a field in your user model
+        'id' : user.id
     }
+
+    return access_token_payload
+
 
 @api_view(['POST'])
 def registerUser(request):
@@ -37,21 +47,22 @@ def registerUser(request):
             user_type = serializer.validated_data.get('user_type', 'student')
             is_instructor = user_type == 'instructor'
 
-            # Generate OTP
+            # Generate OTP, create user, and save OTP secret key
             otp_key = pyotp.random_base32()
             otp_instance = pyotp.TOTP(otp_key, digits=6)
             otp_code = otp_instance.now()
 
-            # Create user and save OTP secret key
             user = serializer.save(user_type=user_type, is_instructor=is_instructor)
             otp = OTP.objects.create(
                 user=user,
                 otp_secret=otp_key,
             )
 
+            # Create a profile for the registered user
+            # Profile.objects.create(user=user, name=data.get('name', ''), image=data.get('image'), bio=data.get('bio'))
+
             # Send OTP via email
             send_otp_email(data["email"], otp_code)
-            # serializer = UserSerializerWithToken(user, many=False)
 
             token = get_tokens_for_user(user)
             response_data = {
@@ -101,25 +112,28 @@ def send_otp_email(email, otp_code):
     recipient_list = [email]
     send_mail(subject, message, email_from, recipient_list)
 
-# @api_view(['POST'])
-# def resend_otp(request):
-#     try:
-#         data = request.data
-#         user_id = data['user_id']
-#         user = User.objects.get(id=user_id)
-        
-#         if user.is_active:
-#             return Response({'message': 'Account is already active. Cannot resend OTP.'}, status=status.HTTP_400_BAD_REQUEST)
-        
-#         otp = OTP.objects.get(user=user)
-#         otp_key = otp.otp_secret
-#         otp_instance = pyotp.TOTP(otp_key, digits=6)
-#         otp_code = otp_instance.now()
-#         send_otp_email(user.email, otp_code)
-#         return Response({'message': 'OTP has been sent to your email'}, status=status.HTTP_200_OK)
-    
-#     except User.DoesNotExist:
-#         return Response({'message': 'User does not exist'}, status=status.HTTP_404_NOT_FOUND)
+@api_view(['POST'])
+def resend_otp(request):
+    data = request.data
+    user_id = data['user_id']
+    otp_id = data['otp_id']
+
+    user = User.objects.get(id=user_id)
+    otp = OTP.objects.get(id=otp_id, user=user)
+    print(otp.otp_secret)
+    # print(otp_code)
+
+    otp_key = pyotp.random_base32()
+    otp_instance = pyotp.TOTP(otp_key, digits=6)
+    otp_code = otp_instance.now()
+
+    otp.otp_secret = otp_key
+    otp.is_verified = False
+    otp.save()
+
+    send_otp_email(user.email, otp_code)
+
+    return Response({'message': 'OTP has been resent successfully'}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def loginUser(request, format=None):
@@ -133,60 +147,57 @@ def loginUser(request, format=None):
             if user is not None:
                 token = get_tokens_for_user(user)
                 user_type = 'instructor' if user.is_instructor else 'student'
-                response_data = {'token': token, 'msg': 'Login Success', 'user_type': user_type}
+
+                # Get the user's profile if it exists
+                # profile = Profile.objects.filter(user=user).first()
+
+                response_data = {
+                    'token': token,
+                    'msg': 'Login Success',
+                    'user_type': user_type,
+                    # 'profile': UserProfileSerializer(profile).data if profile else None
+                }
                 return Response(response_data, status=status.HTTP_200_OK)
             else:
                 return Response({'errors': {'non_field_errors': ['Email or Password is not valid']}}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            # Handle serializer validation errors
             raise ValidationError(serializer.errors)
 
 
 
-class UserProfileView(APIView):
-    renderer_classes = [UserRenderer]
-    # permission_classes = [IsAuthenticated]
-    def get(self, request, format=None):
-        serializer= UserProfileSerializer(request.user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def userProfile(request):
+    user = request.user
+    profile = get_object_or_404(Profile, user=user)
+    serializer = UserProfileSerializer(profile)
+    return Response(serializer.data)
 
-class UserProfileView(APIView):
-    permission_classes = (IsAuthenticated,)
-    
-    def get(self, request, format=None):
-        try:
-            user = request.user
-            profile = user.profile  
-            profile_serializer = ProfileSerializer(profile)
-            user_serializer = UserProfileSerializer(user)
-            return Response({'user_data': user_serializer.data, 'userprofile_data': profile_serializer.data}, status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
-def updateUserProfile(request):
-    try:
-        user = request.user
-        profile = user.profile
-        data = request.data
+def updateProfile(request):
+    user = request.user
+    profile = get_object_or_404(Profile, user=user)
+    serializer = UserProfileSerializer(profile, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                    
 
-        if 'userprofile_picture' in request.FILES:
-            profile.image = request.FILES['userprofile_picture']
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def updateTheme(request):
+    user = request.user
+    profile = Profile.objects.get(user=user)
+    theme_preference = user.profile.theme_preference
 
-        profile.name = data.get('name', profile.name)
-        user.email = data.get('email', user.email)
-        profile.save()    
-        user.save()
-        
-        profile_serializer = ProfileSerializer(profile)
-        user_serializer = UserProfileSerializer(user)
-        return Response({'message': 'Profile updated successfully', 'user_data': user_serializer.data, 'userprofile_data': profile_serializer.data}, status=status.HTTP_200_OK)
-
-    except Exception as e:
-        print("Internal Server Error:", e)
-        return Response({'error': 'Internal Server Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    serializer = UserPreferenceSerializer(theme_preference, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserChangePasswordView(APIView):

@@ -6,7 +6,9 @@ from django.utils.encoding import smart_str, force_bytes, DjangoUnicodeDecodeErr
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from .models import Profile
-
+from django.contrib.auth import get_user_model
+from .models import UserPreference
+User = get_user_model()
 
 class UserRegistrationSerializers(serializers.ModelSerializer):
     # Additional fields for user type
@@ -75,18 +77,41 @@ class UserLoginSerializer(serializers.ModelSerializer):
 # class UserSerializerWithToken(UserSerializer):
 #     token = serializers.SerializerMethodField(read_only=True)
 
+# class UserProfileSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Profile
+#         fields = ['id', 'user', 'image', 'name', 'bio']
+#         read_only_fields = ['id', 'user']  # Include all fields from the Profile model
+
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ['id', 'email', 'name']
-
-class ProfileSerializer(serializers.ModelSerializer):
-    class Meta:
         model = Profile
-        fields = '__all__'
+        fields = ['id', 'user', 'image', 'name', 'bio']
+        read_only_fields = ['user']
 
-    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    def create(self, validated_data):
+        return Profile.objects.create(user=self.context['request'].user, **validated_data)
+
+    def update(self, instance, validated_data):
+        instance.image = validated_data.get('image', instance.image)
+        instance.name = validated_data.get('name', instance.name)
+        instance.bio = validated_data.get('bio', instance.bio)
+        instance.save()
+        return instance
+    
+
+class UserPreferenceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserPreference
+        fields = ['theme']
+
+# class ProfileUpdateSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Profile
+#         fields = ['image', 'name', 'bio']
+
+    # user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
 
 
 class UserChangePasswordSerializer(serializers.Serializer):

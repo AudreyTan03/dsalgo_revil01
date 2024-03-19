@@ -20,9 +20,8 @@ import OTPVerification from "./Screens/OTPVerification";
 import HomeScreen from "./Screens/HomeScreen";
 import StudentNav from "./Screens/StudentHomeScreen";
 import StudentHomeScreen from "./Screens/StudentHomeScreen";
-import EditScreen from "./Screens/EditScreen";
-import StudentProductScreen from "./Screens/StudentProductHomescreen";
 // need mag kakasunod amp
+import ProfileScreen from "./Screens/ProfileScreen";
 
 function App() {
   return (
@@ -31,15 +30,15 @@ function App() {
       
       <Container>
         <Routes>
-          <Route path="/" element={<HeroSection />} />
+          <Route path="/HeroSection" element={<HeroSection />} />
           <Route path="studenthomescreen" element={<StudentHomeScreen />} />
-          <Route path="/studentproductscreen" element={<StudentProductScreen />} />
 
           <Route path="/homeScreen" element={<HomeScreen/>} />
           <Route path="/StudentNav" element={<StudentNav />} />
 
           <Route path="/navbar" element={<Navbar />} />
           <Route path="/login" element={<LoginScreen />} />
+          <Route path="/profile" element={<ProfileScreen />} />
           <Route path="/cart" element={<CartScreen />} />
           <Route path="/register" element={<RegisterScreen />} />
           <Route path="/request-changepass" element={<RequestChangePass />} />
@@ -50,15 +49,13 @@ function App() {
           <Route path="/products" element={<ProductHome />} exact />
           <Route path="/product/:id" element={<Productscreen />} />
           <Route path="/upload" element={<UploadProduct />} />
-          <Route path="/edit" element={<EditScreen />} />
-
           <Route
             path={`/verify-otp/user_id/:userId/otp/:otpId`}
             element={<OTPVerification />}
           />
 
           {/* <Route path='/sign-in' element={<SignIn />} /> */}
-          <Route path="/home" element={<Home />} />
+          <Route path="/" element={<Home />} />
         </Routes>
       </Container>
       {/* <Footer/> */}

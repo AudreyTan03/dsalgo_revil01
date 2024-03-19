@@ -20,7 +20,17 @@ import {
     USER_VERIFY_OTP_FAIL, 
     USER_RESEND_OTP_REQUEST,
     USER_RESEND_OTP_SUCCESS,
-    USER_RESEND_OTP_FAIL, 
+    USER_RESEND_OTP_FAIL,
+    USER_UPDATE_PROFILE_REQUEST,
+    USER_UPDATE_PROFILE_SUCCESS,
+    USER_UPDATE_PROFILE_FAIL,
+    USER_UPDATE_PROFILE_RESET,
+    USER_DETAILS_REQUEST,
+    USER_DETAILS_SUCCESS,
+    USER_DETAILS_FAIL,  
+    THEME_UPDATE_REQUEST,
+    THEME_UPDATE_SUCCESS,
+    THEME_UPDATE_FAIL,
 } from '../constants/userConstants';
 
 export const userSetRoleReducer = (state = {}, action) => {
@@ -65,20 +75,21 @@ export const userRegisterReducer = (state = {}, action) => {
         
     }
   }
-//   export const userResendOtpReducer = (state = {}, action) => {
-//     switch (action.type) {
-//       case USER_RESEND_OTP_REQUEST:
-//         return { loading: true };
-//       case USER_RESEND_OTP_SUCCESS:
-//         return { loading: false, userInfo: action.payload };
-//       case USER_RESEND_OTP_FAIL:
-//         return { loading: false, error: action.payload };
-//       case USER_LOGOUT:
-//         return {};
-//       default:
-//         return state;
-//     }
-//   }
+
+  export const userResendOtpReducer = (state = {}, action) => {
+    switch (action.type) {
+      case USER_RESEND_OTP_REQUEST:
+        return { loading: true };
+      case USER_RESEND_OTP_SUCCESS:
+        return { loading: false, userInfo: action.payload };
+      case USER_RESEND_OTP_FAIL:
+        return { loading: false, error: action.payload };
+      case USER_LOGOUT:
+        return {};
+      default:
+        return state;
+    }
+  }
 
 export const userLoginReducer = (state = {}, action) => {
     switch (action.type) {
@@ -94,6 +105,64 @@ export const userLoginReducer = (state = {}, action) => {
             return state;
     }
 };
+
+export const userDetailsReducer = (state = { user: {} }, action) => {
+    switch (action.type) {
+      case USER_DETAILS_REQUEST:
+        return { ...state, loading: true };
+      case USER_DETAILS_SUCCESS:
+        return { loading: false, user: action.payload };
+      case USER_DETAILS_FAIL:
+        return { loading: false, error: action.payload };
+      default:
+        return state;
+    }
+  };
+  
+  export const userUpdateProfileReducer = (state = {}, action) => {
+    switch (action.type) {
+      case USER_UPDATE_PROFILE_REQUEST:
+        return { loading: true };
+      case USER_UPDATE_PROFILE_SUCCESS:
+        return { loading: false, success: true, userInfo: action.payload };
+      case USER_UPDATE_PROFILE_FAIL:
+        return { loading: false, error: action.payload };
+      case USER_UPDATE_PROFILE_RESET:
+        return {};
+      default:
+        return state;
+    }
+  };
+
+  const initialState = {
+    theme: 'light', // Default theme
+    loading: false,
+    error: null
+};
+
+export const userUpdateThemePreferenceReducer = (state = initialState, action) => {
+    switch (action.type) {
+        case THEME_UPDATE_REQUEST:
+            return {
+                ...state,
+                loading: true
+            };
+        case THEME_UPDATE_SUCCESS:
+            return {
+                ...state,
+                loading: false
+            };
+        case THEME_UPDATE_FAIL:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload
+            };
+        default:
+            return state;
+    }
+};
+
 
 export const userChangePasswordReducer = (state = {}, action) => {
     switch(action.type) {

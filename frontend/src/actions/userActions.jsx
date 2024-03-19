@@ -22,9 +22,19 @@ import {
     USER_VERIFY_OTP_REQUEST,
     USER_VERIFY_OTP_SUCCESS,
     USER_VERIFY_OTP_FAIL,
-    // USER_RESEND_OTP_REQUEST,
-    // USER_RESEND_OTP_SUCCESS,
-    // USER_RESEND_OTP_FAIL,
+    USER_RESEND_OTP_REQUEST,
+    USER_RESEND_OTP_SUCCESS,
+    USER_RESEND_OTP_FAIL,
+    USER_UPDATE_PROFILE_REQUEST,
+    USER_UPDATE_PROFILE_SUCCESS,
+    USER_UPDATE_PROFILE_FAIL,
+    USER_UPDATE_PROFILE_RESET,
+    USER_DETAILS_REQUEST,
+    USER_DETAILS_SUCCESS,
+    USER_DETAILS_FAIL,
+    THEME_UPDATE_REQUEST,
+    THEME_UPDATE_SUCCESS,
+    THEME_UPDATE_FAIL,
 } from '../constants/userConstants';
 
 export const register = (name, email, password, userType, confirmPassword) => async (dispatch) => {
@@ -91,7 +101,46 @@ export const VerifyOtp = (user_id, otp_id, otp_code) => async (dispatch) => {
     }
 };
 
-// export const resendOtp = (user_id, otp_id) => async (dispatch) => {
+
+export const ResendOtp = (user_id, otp_id) => async (dispatch) => {
+    try {
+        dispatch({
+            type: USER_RESEND_OTP_REQUEST,
+        });
+
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        };
+
+        // Ensure user_id and otp_id are not null
+        // if (!user_id || !otp_id) {
+        //     throw new Error("User ID or OTP ID is missing.");
+        // }
+
+        const { data } = await axios.post(
+            "/api/resend-otp/",
+            { user_id, otp_id },
+            config
+        );
+
+        dispatch({
+            type: USER_RESEND_OTP_SUCCESS,
+            payload: data,
+        });
+    } catch (error) {
+        dispatch({
+            type: USER_RESEND_OTP_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message,
+        });
+    }
+};
+
+// export const ResendOtp = (user_id, otp_id) => async (dispatch) => {
 //     try {
 //       dispatch({
 //         type: USER_RESEND_OTP_REQUEST,
@@ -99,23 +148,16 @@ export const VerifyOtp = (user_id, otp_id, otp_code) => async (dispatch) => {
   
 //       const config = {
 //         headers: {
-//           'Content-Type': 'application/json',
+//           "Content-Type": "application/json",
 //         },
 //       };
   
-//       const { data } = await axios.post(
-//         'api/user/resend-otp/',
-//         { user_id, otp_id },
-//         config
-//       );
+//       const { data } = await axios.post('http://127.0.0.1:8000/api/resend-otp/', { user_id, otp_id }, config);
   
 //       dispatch({
 //         type: USER_RESEND_OTP_SUCCESS,
-//         payload: data, // Make sure to include the response data in the payload
+//         payload: data,
 //       });
-  
-//       return data; // Return the response data
-  
 //     } catch (error) {
 //       dispatch({
 //         type: USER_RESEND_OTP_FAIL,
@@ -165,6 +207,112 @@ export const login = (email, password) => async (dispatch) => {
         });
     }
 };
+
+export const getUserDetails = () => async (dispatch, getState) => {
+    try {
+        dispatch({ type: USER_DETAILS_REQUEST });
+  
+        const {
+            userLogin: { userInfo },
+        } = getState();
+  
+        if (!userInfo || !userInfo.token) {
+            throw new Error('User information is missing or incomplete');
+        }
+  
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token.access}`,
+            },
+        };
+  
+        console.log('Access Token:', userInfo.token.access);
+        const { data } = await axios.get('api/profile/', config);
+        console.log('Response Data:', data);
+  
+        dispatch({
+            type: USER_DETAILS_SUCCESS,
+            payload: data.profile_data,
+        });
+    } catch (error) {
+        dispatch({
+            type: USER_DETAILS_FAIL,
+            payload: error.response
+                ? error.response.data.message
+                : error.message || 'Error fetching user details',
+        });
+    }
+};
+
+export const updateThemePreference = (theme) => async (dispatch) => {
+    try {
+      dispatch({ type: THEME_UPDATE_REQUEST });
+  
+      // Send a request to update the theme preference
+      const { data } = await axios.put('/api/update-theme', { theme });
+  
+      dispatch({ type: THEME_UPDATE_SUCCESS, payload: data });
+    } catch (error) {
+      dispatch({
+        type: THEME_UPDATE_FAIL,
+        payload:
+          error.response && error.response.data.detail
+            ? error.response.data.detail
+            : error.message,
+      });
+    }
+  }
+
+export const resetUpdateProfile = () => (dispatch) => {
+    dispatch({ type: USER_UPDATE_PROFILE_RESET });
+  };
+  
+  export const updateUserProfile = (updatedUser, profilePicture) => async (dispatch, getState) => {
+    try {
+        dispatch({ type: USER_UPDATE_PROFILE_REQUEST });
+  
+        const { userLogin: { userInfo } } = getState();
+  
+        if (!userInfo || !userInfo.token) {
+            throw new Error('User information is missing or incomplete');
+        }
+  
+        const formData = new FormData();
+  
+        formData.append('name', updatedUser.name || '');
+        formData.append('email', updatedUser.email || '');
+  
+        if (profilePicture) {
+            formData.append('userprofile_pics', profilePicture);
+        }
+  
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token.access}`,
+                'Content-Type': 'multipart/form-data',
+            },
+        };
+
+        console.log('Access Token:', userInfo.token.access);
+  
+        const { data } = await axios.put('api/profile/update/', formData, config);
+  
+        dispatch({
+            type: USER_UPDATE_PROFILE_SUCCESS,
+            payload: data.profile_data,
+        });
+    } catch (error) {
+        dispatch({
+            type: USER_UPDATE_PROFILE_FAIL,
+            payload: error.response
+                ? error.response.data.message
+                : error.message || 'Error updating user profile',
+        });
+    }
+};
+
+
+
 
 // Other action creators...
 

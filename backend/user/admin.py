@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from user.models import User
+from user.models import Profile
+from user.models import UserPreference
 
 class UserModelAdmin(BaseUserAdmin):
     # The fields to be used in displaying the User model.
@@ -29,3 +31,18 @@ class UserModelAdmin(BaseUserAdmin):
 
 # Register the new UserModelAdmin...
 admin.site.register(User, UserModelAdmin)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'name', 'bio')
+    search_fields = ('name', 'bio')
+    list_filter = ('user',)
+
+admin.site.register(Profile, ProfileAdmin)
+
+
+class UserPreferenceAdmin(admin.ModelAdmin):
+    list_display = ('user', 'theme')  # Display the user and theme preference in the list view
+    search_fields = ('user__name',)  # Add search functionality based on the user's name
+    list_filter = ('theme',)  # Add filter options for the theme preference
+
+admin.site.register(UserPreference, UserPreferenceAdmin)
+

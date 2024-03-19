@@ -1,3 +1,4 @@
+/* Styles for Main Navbar */
 .navbar {
   background: #161A30;
   height: 80px;
@@ -123,3 +124,56 @@
     margin-top: 10px;
   }
 }
+
+/* Styles for Secondary Navbar */
+.secondary-navbar {
+  background: #1d2a35; /* Set background color */
+  height: auto; /* Set height to auto */
+  display: flex;
+  align-items: center;
+  overflow-x: auto; /* Allow horizontal scrolling */
+  padding: 10px 0; /* Add padding above and below */
+}
+
+.subject-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex; /* Ensure subject links are displayed inline */
+}
+
+.subject-links .nav-item {
+  margin-right: 10px; /* Adjust margin between subject links */
+}
+
+.subject-links .nav-links {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold; /* Make subject names bold */
+  transition: border 0.3s, background-color 0.3s; /* Add transition effect for smooth hover */
+}
+
+.subject-links .nav-links:hover {
+  border: 1px solid #000; /* Add black border around subject link on hover */
+  background-color: #000; /* Change background color to black on hover */
+  padding: 5px 10px; /* Optional: Add padding to create space around the text */
+}
+
+.arrow-btn {
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1.5rem;
+  margin: 0 10px; /* Adjust margin between arrow buttons */
+  outline: none;
+}
+
+.arrow-btn:hover {
+  text-decoration: underline;
+}
+
+
+
+
+
