@@ -170,6 +170,10 @@ export const ResendOtp = (user_id, otp_id) => async (dispatch) => {
 //   };
 
 
+const instance = axios.create({
+    baseURL: 'http://127.0.0.1:8000/'
+})
+
 export const login = (email, password) => async (dispatch) => {
     try {
         dispatch({ type: USER_LOGIN_REQUEST });
@@ -178,11 +182,13 @@ export const login = (email, password) => async (dispatch) => {
                 'Content-Type': 'application/json',
             },
         };
-        const { data } = await axios.post(
-            'http://127.0.0.1:8000/api/users/login/',
+        const { data } = await instance.post(
+            'api/users/login/',
             { email, password },
             config
         );
+
+        console.log('data',data)
         dispatch({
             type: USER_LOGIN_SUCCESS,
             payload: data,
@@ -190,11 +196,11 @@ export const login = (email, password) => async (dispatch) => {
         localStorage.setItem('userInfo', JSON.stringify(data));
 
         // Set user role
-        if (data.is_instructor) {
-            dispatch({ type: USER_SET_INSTRUCTOR });
-        } else {
-            dispatch({ type: USER_SET_STUDENT });
-        }
+        // if (data.is_instructor) {
+        //     dispatch({ type: USER_SET_INSTRUCTOR });
+        // } else {
+        //     dispatch({ type: USER_SET_STUDENT });
+        // }
 
         // Redirect logic here
 
@@ -232,7 +238,7 @@ export const getUserDetails = () => async (dispatch, getState) => {
   
         dispatch({
             type: USER_DETAILS_SUCCESS,
-            payload: data.profile_data,
+            payload: data,
         });
     } catch (error) {
         dispatch({

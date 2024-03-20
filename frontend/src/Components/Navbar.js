@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux'; // Import Redux hooks
+import { useDispatch } from 'react-redux'; // Import Redux useDispatch hook
 import { BsSearch } from "react-icons/bs";
-import { updateThemePreference } from '../actions/userActions'; // Import Redux action
+import { logout, updateThemePreference } from '../actions/userActions'; // Import Redux actions
 import './Navbar.css';
 
 function Navbar() {
@@ -10,9 +10,6 @@ function Navbar() {
   const [darkMode, setDarkMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const dispatch = useDispatch(); // Initialize useDispatch hook
-
-  // Use optional chaining to handle cases where state.theme is undefined
-  const { loading, error } = useSelector(state => state.theme) || {};
 
   const handleThemeChange = (theme) => {
     dispatch(updateThemePreference(theme));
@@ -37,6 +34,11 @@ function Navbar() {
   useEffect(() => {
     // Add logic to handle dark mode styles
   }, [darkMode]);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    // Additional logic for logout if needed
+  };
 
   return (
     <>
@@ -80,7 +82,7 @@ function Navbar() {
               </Link>
             </li>
             <li className='nav-item'>
-              <Link to='/login' className='nav-links' onClick={closeMobileMenu}>
+              <Link to='/login' className='nav-links' onClick={handleLogout}>
                 Logout
               </Link>
             </li>

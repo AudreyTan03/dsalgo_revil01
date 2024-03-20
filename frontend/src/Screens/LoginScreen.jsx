@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../Components/Loader';
 import Message from '../Components/Message';
-import axios from 'axios'; // Import axios
+import { login } from '../actions/userActions'; // Import the login action
 import FormContainer from '../Components/FormContainer';
 import './register.css';
 
@@ -12,36 +12,25 @@ function LoginScreen() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const userLogin = useSelector(state => state.userLogin);
-    const { loading, userInfo } = userLogin;
+    const { loading, error, userInfo } = userLogin;
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [error, setError] = useState('');
 
-    
-
-    const submitHandler = async (e) => {
+    const submitHandler = (e) => {
         e.preventDefault();
-        try {
-            const response = await axios.post('http://127.0.0.1:8000/api/users/login/', { email, password });
-            const { token, user_type, msg } = response.data;
-            // You can now store the token and user type in your Redux store or local storage
-            // For example, dispatch a login action with the token and user type
-            // dispatch(loginSuccess(token, user_type));
-            // Navigate to the appropriate page based on the user type
-            if (user_type === 'instructor') {
-                navigate('/HomeScreen');
-            } else {
-                navigate('/studenthomescreen');
-            }
-        } catch (error) {
-            setError('Email or password is incorrect');
-        }
+        // Dispatch login action
+        dispatch(login(email, password));
     }
-
-    // Handle request password change
     const handleRequestPasswordChange = () => {
         navigate('/request-changepass');
     }
+
+    // Redirect if logged in
+    useEffect(() => {
+        if (userInfo) {
+            navigate('/HomeScreen'); // Modify this redirect as needed
+        }
+    }, [navigate, userInfo]);
 
     return (
         <div className="inputContainer">

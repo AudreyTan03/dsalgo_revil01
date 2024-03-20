@@ -171,6 +171,7 @@ def loginUser(request, format=None):
 @permission_classes([IsAuthenticated])
 def userProfile(request):
     user = request.user
+    print(user)
     profile = get_object_or_404(Profile, user=user)
     serializer = UserProfileSerializer(profile)
     return Response(serializer.data)

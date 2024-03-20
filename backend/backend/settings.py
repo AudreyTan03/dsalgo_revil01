@@ -175,3 +175,6 @@ PASSWORD_RESET_TIMEOUT = 900  # 900 seconds = 15 minutes
 
 # Custom user model
 AUTH_USER_MODEL = 'user.User'
+
+
+APPEND_SLASH=False
