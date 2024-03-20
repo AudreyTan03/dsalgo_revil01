@@ -16,6 +16,7 @@ function HeroSection() {
   return (
     <>
       {/* <Navbar /> Add Navbar component */}
+      {/* <div className='hero-container' style={backgroundImageStyle}> */}
       <div className='hero-container' style={backgroundImageStyle}>
         <h1>Develop New Skills without Limits</h1>
         <p>With the world's best teaching site.</p>
