@@ -29,6 +29,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import BasePermission
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+
 
 from .models import Product
 from .serializers import ProductSerializer
@@ -111,16 +113,20 @@ class CategoryDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-
+@permission_classes([IsAuthenticated])
 class PostProduct(APIView):
     def post(self, request, *args, **kwargs):
+        if not request.user.is_instructor:
+            return Response({'error': 'Only instructors can post products'}, status=status.HTTP_403_FORBIDDEN)
+        
         product_serializer = ProductSerializer(data=request.data)
         if product_serializer.is_valid():
-            product_serializer.save()
+            product = product_serializer.save(user=request.user)
             return Response(product_serializer.data, status=status.HTTP_201_CREATED)
         else:
             print('error', product_serializer.errors)
             return Response(product_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
 
 @api_view(['GET'])
 def getRoutes(request):

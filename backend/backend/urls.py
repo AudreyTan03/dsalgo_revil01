@@ -24,6 +24,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('base.urls')),  # Add a comma here
     path('api/', include('user.urls')),  # Add a comma here
+    path('api/', include('videos.urls')),  # Add a comma here
+
 ]
 
 if settings.DEBUG:

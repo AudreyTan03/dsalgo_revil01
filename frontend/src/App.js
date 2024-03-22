@@ -23,6 +23,7 @@ import StudentHomeScreen from "./Screens/StudentHomeScreen";
 // need mag kakasunod amp
 import ProfileScreen from "./Screens/ProfileScreen";
 import EditScreen from "./Screens/EditScreen";
+import VideoDetailScreen from './Screens/VideoDetailScreen';
 
 function App() {
   return (
@@ -54,6 +55,8 @@ function App() {
             path={`/verify-otp/user_id/:userId/otp/:otpId`}
             element={<OTPVerification />}
           />
+          
+          <Route path="/videos/:videoId/" element={<VideoDetailScreen />} />
 
           {/* <Route path='/sign-in' element={<SignIn />} /> */}
           <Route path="/" element={<Home />} />
